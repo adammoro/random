@@ -13,7 +13,7 @@ then
 fi
 
 PROMPT="$1"
-API_URL="https://api.openai.com/v1/engines/text-davinci-002/completions"
+API_URL="https://api.openai.com/v1/engines/text-davinci-003/completions"
 CONTENT_TYPE="Content-Type: application/json"
 AUTHORIZATION="Authorization: Bearer $OPENAI_API_KEY"
 
