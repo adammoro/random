@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+then
+    echo "Usage: $0 <prompt>"
+    exit 1
+fi
+
+if [ -z "$OPENAI_API_KEY" ]
+then
+    echo "Please set the OPENAI_API_KEY environment variable."
+    exit 1
+fi
+
+PROMPT="$1"
+API_URL="https://api.openai.com/v1/engines/text-davinci-002/completions"
+CONTENT_TYPE="Content-Type: application/json"
+AUTHORIZATION="Authorization: Bearer $OPENAI_API_KEY"
+
+JSON_DATA=$(jq -n \
+                --arg prompt "$PROMPT" \
+                --arg max_tokens "250" \
+                '{prompt: $prompt, max_tokens: ($max_tokens|tonumber), n: 1, echo: false}')
+
+#echo "JSON data:"
+#echo "$JSON_DATA"
+
+RESPONSE=$(curl -s -X POST \
+                -H "$CONTENT_TYPE" \
+                -H "$AUTHORIZATION" \
+                -d "$JSON_DATA" \
+                "$API_URL")
+
+#echo "API response:"
+#echo "$RESPONSE"
+
+#echo "Extracted text:"
+echo "$RESPONSE" | jq -r '.choices[0].text'
+
